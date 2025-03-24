@@ -1,15 +1,15 @@
 services:
   mongo:
-    container_name: mongo
+    container_name: mongo_steam
     image: mongo
     env_file:
       - config/secrets.env
     volumes:
       - ./data:/data/db
     ports:
-      - 27017:27017
+      - 27018:27017
   steam-monitor:
-    container_name: trader
+    container_name: steam_monitor
     env_file:
       - config/secrets.env
     build:

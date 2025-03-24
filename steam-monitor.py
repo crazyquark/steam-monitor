@@ -26,7 +26,10 @@ def check_status(user):
     gameId = res['player']['gameid'] if 'gameid' in res['player'] else ''
     game = res['player']['gameextrainfo'] if 'gameextrainfo' in res['player'] else ''
 
-    prev_online = prev_state[user][gameId] if user in prev_state and gameId in prev_state[user] else 0
+    if not user in prev_state:
+        prev_state[user] = {}
+
+    prev_online = prev_state[user][gameId] if gameId in prev_state[user] else 0
     if gameId:
         if prev_online == 0:
             # Started game
@@ -37,7 +40,6 @@ def check_status(user):
                 'game': game,
                 'start_time': start_time
             })
-
         prev_state[user][gameId] = 1
     elif prev_state == 1:
         # Game end

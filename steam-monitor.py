@@ -41,7 +41,7 @@ def check_status(user):
                 'start_time': start_time
             })
         prev_state[user][gameId] = 1
-    elif prev_state == 1:
+    elif prev_online == 1:
         # Game end
         end_time = datetime.now(tz)
         db.store(date={

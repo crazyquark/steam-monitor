@@ -1,0 +1,19 @@
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    env_file:
+      - config/secrets.env
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+  steam-monitor:
+    container_name: trader
+    env_file:
+      - config/secrets.env
+    build:
+      context: .
+      dockerfile: Dockerfile.steam-monitor
+    depends_on:
+      - mongo

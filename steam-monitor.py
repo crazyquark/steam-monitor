@@ -6,7 +6,7 @@ from datetime import datetime
 import asyncio
 
 from config.secrets import STEAM_WEBAPI_KEY
-from config.steam import users, check_interval_seconds
+from config.steam import users, check_interval_seconds, timezone
 import db
 
 steam = Steam(STEAM_WEBAPI_KEY)
@@ -42,7 +42,7 @@ def check_status(user):
     global start_time
     global end_time
 
-    tz = ZoneInfo('Europe/Bucharest')
+    tz = ZoneInfo(timezone)
     res = steam.users.search_user(user)
     # print(res)
     # logoff = datetime.fromtimestamp(

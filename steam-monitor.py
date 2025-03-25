@@ -15,6 +15,26 @@ prev_state = {}
 prev_gameId = ''
 
 
+def save_state():
+    global prev_gameId
+    for user in users:
+        if user in prev_state:
+            db.store(dbname='state', data={
+                'user': user,
+                'game_id': prev_gameId,
+                'prev_state': prev_state[user],
+            })
+
+
+def load_state():
+    global prev_gameId
+    for user in users:
+        state = db.get_data(user, 'state')
+        if state:
+            prev_gameId = state['game_id']
+            prev_state[user] = state['prev_state']
+
+
 def check_status(user):
     global prev_gameId
 
@@ -36,7 +56,7 @@ def check_status(user):
         if prev_online == 0:
             # Started game
             start_time = datetime.now(tz)
-            db.store(data={
+            db.store(dbname='activity', data={
                 'user': user,
                 'game_id': gameId,
                 'game': game,
@@ -47,7 +67,7 @@ def check_status(user):
     elif prev_online == 1:
         # Game end
         end_time = datetime.now(tz)
-        db.store(date={
+        db.store(dbname='activity', data={
             'user': user,
             'game_d': gameId,
             'game': game,
@@ -58,11 +78,14 @@ def check_status(user):
 
 
 async def check_user_loop():
-    while True:
-        for user in users:
-            check_status(user)
-        await asyncio.sleep(check_interval_seconds)
-
+    try:
+        while True:
+            for user in users:
+                check_status(user)
+            await asyncio.sleep(check_interval_seconds)
+    except:
+        save_state()
 
 if __name__ == '__main__':
+    load_state()
     asyncio.run(check_user_loop())

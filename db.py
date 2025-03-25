@@ -1,5 +1,4 @@
 import os
-import datetime
 from pymongo import MongoClient
 from config.mongo import MONGO_PATH
 
@@ -13,11 +12,18 @@ def connect_mongo():
     return client
 
 
-def store(data, client=connect_mongo()):
-    db = client.steam
+def get_data(user, dbname, single=True, client=connect_mongo()):
+    db = client.steam[user][dbname]
+    return db.find_one() if single else db.find()
+
+
+def store(data, dbname, client=connect_mongo()):
+    if not dbname:
+        return
+
     user = data['user']
-    user_db = db[user]
+    db = client.steam[user][dbname]
     print(data)
 
     del data['user']
-    user_db.insert_one(data)
+    db.insert_one(data)

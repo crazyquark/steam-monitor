@@ -13,6 +13,8 @@ steam = Steam(STEAM_WEBAPI_KEY)
 
 prev_state = {}
 prev_gameId = ''
+start_time = None
+end_time = None
 
 
 def save_state():
@@ -37,6 +39,8 @@ def load_state():
 
 def check_status(user):
     global prev_gameId
+    global start_time
+    global end_time
 
     tz = ZoneInfo('Europe/Bucharest')
     res = steam.users.search_user(user)
@@ -69,12 +73,18 @@ def check_status(user):
         end_time = datetime.now(tz)
         db.store(dbname='activity', data={
             'user': user,
-            'game_d': gameId,
+            'game_id': gameId,
             'game': game,
             'end_time': end_time,
         })
 
         prev_state[user][gameId] = 0
+        if start_time:
+            db.store(dbname='session', data={
+                'user': user,
+                'game_id': gameId,
+                'duration': end_time - start_time
+            })
 
 
 async def check_user_loop():

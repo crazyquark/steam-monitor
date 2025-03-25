@@ -83,7 +83,7 @@ def check_status(user):
             db.store(dbname='session', data={
                 'user': user,
                 'game_id': gameId,
-                'duration': end_time - start_time
+                'duration': (end_time - start_time).total_seconds()
             })
 
 

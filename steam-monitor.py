@@ -47,13 +47,18 @@ def check_status(user):
     # print(res)
     # logoff = datetime.fromtimestamp(
     #     res['player']['lastlogoff'], tz=tz)
-    # online = int(res['player']['personastate'])
+    online = int(res['player']['personastate'])
 
     gameId = res['player']['gameid'] if 'gameid' in res['player'] else prev_gameId
     game = res['player']['gameextrainfo'] if 'gameextrainfo' in res['player'] else ''
 
     if not user in prev_state:
         prev_state[user] = {}
+
+    # Could not retrieve game info, so just log online time on Steam
+    if not game and online == 1:
+        gameId = '-1'
+        game = 'Steam'
 
     prev_online = prev_state[user][gameId] if gameId in prev_state[user] else 0
     if game:

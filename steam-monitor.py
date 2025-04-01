@@ -56,11 +56,16 @@ def check_status(user):
     #     res['player']['lastlogoff'], tz=tz)
     online = int(res['player']['personastate'])
 
-    gameId = res['player']['gameid'] if 'gameid' in res['player'] else '-1'
+    gameId = res['player']['gameid'] if 'gameid' in res['player'] else prev_gameId
     game = res['player']['gameextrainfo'] if 'gameextrainfo' in res['player'] else prev_game
 
     if not user in prev_state:
         prev_state[user] = {}
+
+    # Could not get game info
+    if online == 1 and not game:
+        game = 'Steam'
+        gameId = '-1'
 
     prev_online = prev_state[user][gameId] if gameId in prev_state[user] else 0
     if online == 1:

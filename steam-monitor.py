@@ -96,6 +96,7 @@ def check_status(user):
             db.store(dbname='session', data={
                 'user': user,
                 'game_id': gameId,
+                'game': game,
                 'start_time': start_time,
                 'end_time': end_time,
                 'duration': (end_time - start_time).total_seconds()

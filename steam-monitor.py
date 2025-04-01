@@ -21,21 +21,25 @@ end_time = None
 
 def save_state():
     global prev_gameId
+    global prev_game
     for user in users:
         if user in prev_state:
             db.store(dbname='state', data={
                 'user': user,
                 'game_id': prev_gameId,
+                'game': prev_game,
                 'prev_state': prev_state[user],
             })
 
 
 def load_state():
     global prev_gameId
+    global prev_game
     for user in users:
         state = db.get_data(user, 'state')
         if state:
             prev_gameId = state['game_id']
+            prev_game = state['game']
             prev_state[user] = state['prev_state']
 
 

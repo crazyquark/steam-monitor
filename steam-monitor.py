@@ -104,7 +104,7 @@ async def check_user_loop():
         save_state()
 
 
-def stop():
+def stop(signum, frame):
     asyncio.get_event_loop().stop()
     save_state()
 

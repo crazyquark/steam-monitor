@@ -4,6 +4,7 @@ from steam_web_api import Steam
 from zoneinfo import ZoneInfo
 from datetime import datetime
 import asyncio
+import signal
 
 from config.secrets import STEAM_WEBAPI_KEY
 from config.steam import users, check_interval_seconds, timezone
@@ -102,6 +103,14 @@ async def check_user_loop():
     except:
         save_state()
 
+
+def stop():
+    asyncio.get_event_loop().stop()
+    save_state()
+
+
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, stop)
+    signal.signal(signal.SIGTERM, stop)
     load_state()
     asyncio.run(check_user_loop())

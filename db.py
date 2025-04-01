@@ -13,17 +13,23 @@ def connect_mongo():
 
 
 def get_data(user, dbname, single=True, client=connect_mongo()):
-    db = client.steam[user][dbname]
-    return db.find_one() if single else db.find()
+    try:
+        db = client.steam[user][dbname]
+        return db.find_one() if single else db.find()
+    except Exception as e:
+        print(e)
 
 
 def store(data, dbname, client=connect_mongo()):
-    if not dbname:
-        return
+    try:
+        if not dbname:
+            return
 
-    user = data['user']
-    db = client.steam[user][dbname]
-    print(data)
+        user = data['user']
+        db = client.steam[user][dbname]
+        print(data)
 
-    del data['user']
-    db.insert_one(data)
+        del data['user']
+        db.insert_one(data)
+    except Exception as e:
+        print(e)

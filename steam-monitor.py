@@ -14,6 +14,7 @@ steam = Steam(STEAM_WEBAPI_KEY)
 
 prev_state = {}
 prev_gameId = ''
+prev_game = ''
 start_time = None
 end_time = None
 
@@ -40,6 +41,7 @@ def load_state():
 
 def check_status(user):
     global prev_gameId
+    global prev_game
     global start_time
     global end_time
 
@@ -74,13 +76,14 @@ def check_status(user):
             })
         prev_state[user][gameId] = 1
         prev_gameId = gameId
+        prev_game = game
     elif prev_online == 1:
         # Game end
         end_time = datetime.now(tz)
         db.store(dbname='activity', data={
             'user': user,
             'game_id': gameId,
-            'game': game,
+            'game': prev_game,
             'end_time': end_time,
         })
 

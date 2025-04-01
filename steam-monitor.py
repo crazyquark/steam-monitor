@@ -92,6 +92,7 @@ def check_status(user):
                 'user': user,
                 'game_id': gameId,
                 'start_time': start_time,
+                'end_time': end_time,
                 'duration': (end_time - start_time).total_seconds()
             })
 

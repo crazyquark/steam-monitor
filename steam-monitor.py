@@ -50,7 +50,12 @@ def check_status(user):
     global end_time
 
     tz = ZoneInfo(timezone)
-    res = steam.users.search_user(user)
+    try:
+        res = steam.users.search_user(user)
+    except Exception as e:
+        print(e)
+        return
+
     # print(res)
     # logoff = datetime.fromtimestamp(
     #     res['player']['lastlogoff'], tz=tz)
@@ -109,7 +114,8 @@ async def check_user_loop():
             for user in users:
                 check_status(user)
             await asyncio.sleep(check_interval_seconds)
-    except:
+    except Exception as e:
+        print(e)
         save_state()
 
 

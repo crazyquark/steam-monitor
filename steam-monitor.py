@@ -61,13 +61,13 @@ def check_status(user):
     #     res['player']['lastlogoff'], tz=tz)
     online = int(res['player']['personastate'])
 
-    gameId = res['player']['gameid'] if 'gameid' in res['player'] else prev_gameId
-    game = res['player']['gameextrainfo'] if 'gameextrainfo' in res['player'] else prev_game
+    gameId = res['player']['gameid'] if 'gameid' in res['player'] else ''
+    game = res['player']['gameextrainfo'] if 'gameextrainfo' in res['player'] else ''
 
     if not user in prev_state:
         prev_state[user] = {}
 
-    # Could not get game info
+    # Could not get game info, but user is online now
     if online == 1 and not game:
         game = 'Steam'
         gameId = '-1'
@@ -91,7 +91,7 @@ def check_status(user):
         end_time = datetime.now(tz)
         db.store(dbname='activity', data={
             'user': user,
-            'game_id': gameId,
+            'game_id': prev_gameId,
             'game': prev_game,
             'end_time': end_time,
         })
